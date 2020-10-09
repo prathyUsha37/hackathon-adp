@@ -27,9 +27,6 @@ public class EventParticipant {
 	@JoinColumn(name="eventId", nullable=false)
 	private Event event;
 	
-	@Column(nullable=false)
-	private String response;
-	
 	@Column( nullable = false)
 	private String comment;
 
@@ -57,14 +54,6 @@ public class EventParticipant {
 		this.event = event;
 	}
 
-	public String getResponse() {
-		return response;
-	}
-
-	public void setResponse(String response) {
-		this.response = response;
-	}
-
 	public String getComment() {
 		return comment;
 	}
@@ -75,8 +64,8 @@ public class EventParticipant {
 
 	@Override
 	public String toString() {
-		return "EventParticipant [id=" + id + ", employee=" + employee + ", event=" + event + ", response=" + response
-				+ ", comment=" + comment + "]";
+		return "EventParticipant [id=" + id + ", employee=" + employee + ", event=" + event + ", comment=" + comment
+				+ "]";
 	}
 
 	

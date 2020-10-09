@@ -2,7 +2,7 @@ package com.adp.hackathon.dao;
 
 import java.util.List;
 import javax.transaction.Transactional;
-import com.adp.hackathon.model.Employee;
+import com.adp.hackathon.model.Event;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -18,13 +18,13 @@ import com.adp.hackathon.HibernateUtil;
 
 @Repository
 @Service
-public class EmployeeDAOImpl implements EmployeeDAO{
+public class EventDAOImpl implements EventDAO{
 	
-	private static final Logger logger = LoggerFactory.getLogger(EmployeeDAOImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EventDAOImpl.class);
 	
 	@Transactional
 	@Override
-	public Employee createEmployee(Employee e) {
+	public Event createEvent(Event e) {
 		//e.setId(null);
 		Long Id = null;        
         Transaction transObj = null;
@@ -45,14 +45,14 @@ public class EmployeeDAOImpl implements EmployeeDAO{
             sessionObj.close(); 
         }
         e.setId(Id);
-		logger.info("Employee saved successfully, Employee Details="+e);
+		logger.info("Event saved successfully, Event Details="+e);
 		return e;
 	}
 
 	
 	@Transactional
 	@Override
-	public void updateEmployee(Employee e) {
+	public void updateEvent(Event e) {
 		
 		 Transaction transObj = null;
 	        Session sessionObj = null;
@@ -71,34 +71,22 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 	        } finally {
 	            sessionObj.close(); 
 	        }
-		logger.info("Employee updated successfully, Employee Details="+ e);
+		logger.info("Event updated successfully, Event Details="+ e);
 	}
 
 	
 	@Transactional
 	@Override
-	public List<Employee> listEmployees() {
-//		Session session = this.sessionFactory.getCurrentSession();
-//		@SuppressWarnings("unchecked")
-//		List<Employee> employeeList = session.createQuery("FROM Employee E ").list();
-//		for(Employee e : employeeList){
-//			logger.info("Employee List::"+e);
-//		}
-//		return employeeList;
-		return null;
-	}
-
-	
-	@Transactional
-	@Override
-	public Employee getEmployeeById(Long id) {
-		Employee employee=null;
-        Transaction transObj = null;
+	public List<Event> listEvents() {
+		Transaction transObj = null;
         Session sessionObj = null;
+        List<Event> events=null;
         try {
             sessionObj = HibernateUtil.getSessionFactory().openSession();
             transObj = sessionObj.beginTransaction();
-            employee = sessionObj.get(Employee.class, id);
+            String query="from Event e";
+            Query<Event> qry = sessionObj.createQuery(query);
+            events =qry.list();
             //Perform Some Operation Here
             transObj.commit();
             System.out.println("commited");
@@ -110,19 +98,44 @@ public class EmployeeDAOImpl implements EmployeeDAO{
         } finally {
             sessionObj.close(); 
         }
-	     System.out.println("*****************"+employee.getEmail()+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+id);
-	     logger.info("Employee loaded by Id successfully, Employee details="+employee);
-	     return employee;
+		logger.info("Event, Event Details=");
+		return events;
 	}
 
 	
 	@Transactional
 	@Override
-	public void removeEmployee(Long id) {
+	public Event getEventById(Long id) {
+		Event Event=null;
+        Transaction transObj = null;
+        Session sessionObj = null;
+        try {
+            sessionObj = HibernateUtil.getSessionFactory().openSession();
+            transObj = sessionObj.beginTransaction();
+            Event = sessionObj.get(Event.class, id);
+            //Perform Some Operation Here
+            transObj.commit();
+            System.out.println("commited");
+        } catch (HibernateException exObj) {
+            if(transObj!=null){
+                transObj.rollback();
+            }
+            exObj.printStackTrace(); 
+        } finally {
+            sessionObj.close(); 
+        }
+	     logger.info("Event loaded by Id successfully, Event details="+Event);
+	     return Event;
+	}
+
+	
+	@Transactional
+	@Override
+	public void removeEvent(Long id) {
 //		Session session = this.sessionFactory.getCurrentSession();
-//		Employee e = session.get(Employee.class, id);
+//		Event e = session.get(Event.class, id);
 //		session.delete(e);
-//		logger.info("Employee deleted successfully, Employee details="+e);	
+//		logger.info("Event deleted successfully, Event details="+e);	
 	
 	}
 
@@ -130,13 +143,13 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 	@Transactional
 	@Override
 	public boolean isIdExists(Long id) {
-		Employee employee=null;
+		Event Event=null;
         Transaction transObj = null;
         Session sessionObj = null;
         try {
             sessionObj = HibernateUtil.getSessionFactory().openSession();
             transObj = sessionObj.beginTransaction();
-            employee = sessionObj.get(Employee.class, id);
+            Event = sessionObj.get(Event.class, id);
             //Perform Some Operation Here
             transObj.commit();
             System.out.println("commited");
@@ -149,68 +162,30 @@ public class EmployeeDAOImpl implements EmployeeDAO{
             sessionObj.close(); 
         }
 		
-		logger.info("Employee: is Id "+ id+" exists, Employee details="+employee);	
-		if(null != employee){
+		logger.info("Event: is Id "+ id+" exists, Event details="+Event);	
+		if(null != Event){
 		return true;
 		}
     	return false;
 	}
 
 	
-	@Transactional
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean isEmailExists(String Email) {
-		
-		Employee employee=null;
-        Transaction transObj = null;
-        Session sessionObj = null;
-        try {
-            sessionObj = HibernateUtil.getSessionFactory().openSession();
-            transObj = sessionObj.beginTransaction();
-            String sqlQuery="from Employee where email = :Email";
-            Query<Employee> query = sessionObj.createQuery(sqlQuery);
-  		    query.setParameter("Email", Email);
-  		    employee=query.uniqueResult();
-  		    logger.info("Employee: is Email "+ Email+" exists, Employee details="+employee);	  
-            //Perform Some Operation Here
-            transObj.commit();
-            System.out.println("commited");
-        } catch (HibernateException exObj) {
-            if(transObj!=null){
-                transObj.rollback();
-            }
-            exObj.printStackTrace(); 
-        } finally {
-            sessionObj.close(); 
-        }
-        if(null != employee){
-			return true;
-		}
-		return false;
-		
-	}
-
-
 
 
 	
-	@Transactional
-	@SuppressWarnings({ "unchecked"})
+
 	@Override
-	public Employee getEmployeeByEmail(String Email) {
-		Employee employee=null;
-        Transaction transObj = null;
+	public List<Event> getEventByKeyword(String keyword) {
+		Transaction transObj = null;
         Session sessionObj = null;
+        List<Event> events=null;
         try {
             sessionObj = HibernateUtil.getSessionFactory().openSession();
             transObj = sessionObj.beginTransaction();
-            String sqlQuery="select id,email,name,image,password,managerId,type from Employee where email =:Email";
-            Query<Employee> query = sessionObj.createQuery(sqlQuery);
-  		    //query.setString("Email", Email);
-  		    query.setParameter("Email",Email,StringType.INSTANCE);
-  		    employee=query.uniqueResult();
-  		    logger.info("Employee: with Email "+ Email+" exists, Employee details="+employee);	  
+            @SuppressWarnings("unchecked")
+			Query<Event> qruey = sessionObj.createQuery("From Event as e where e.topic like :sf");
+            qruey.setString("sf",'%'+keyword+'%');
+            events =qruey.list();
             //Perform Some Operation Here
             transObj.commit();
             System.out.println("commited");
@@ -222,8 +197,35 @@ public class EmployeeDAOImpl implements EmployeeDAO{
         } finally {
             sessionObj.close(); 
         }
+		logger.info("Event, Event Details=");
+		return events;
+	}
 
-		return employee;
+
+	@Override
+	public List<Event> getEventSUpcoming() {
+		Transaction transObj = null;
+        Session sessionObj = null;
+        List<Event> events=null;
+        try {
+            sessionObj = HibernateUtil.getSessionFactory().openSession();
+            transObj = sessionObj.beginTransaction();
+            String query="from Event e";
+            Query<Event> qry = sessionObj.createQuery(query);
+            events =qry.list();
+            //Perform Some Operation Here
+            transObj.commit();
+            System.out.println("commited");
+        } catch (HibernateException exObj) {
+            if(transObj!=null){
+                transObj.rollback();
+            }
+            exObj.printStackTrace(); 
+        } finally {
+            sessionObj.close(); 
+        }
+		logger.info("Event, Event Details=");
+		return events;
 	}
 }
 

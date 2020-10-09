@@ -1,6 +1,6 @@
 package com.adp.hackathon.controller;
 
-import static java.lang.String.format;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-        logger.info("Received a new web socket connection.");
+        logger.info("Received a new web socket connection");
     }
 
     @EventListener
@@ -31,15 +31,14 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        String roomId = (String) headerAccessor.getSessionAttributes().get("room_id");
-        if (username != null) {
-            logger.info("User Disconnected: " + username);
+        if(username != null) {
+            logger.info("User Disconnected : " + username);
 
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setType(ChatMessage.MessageType.LEAVE);
             chatMessage.setSender(username);
 
-            messagingTemplate.convertAndSend(format("/channel/%s", roomId), chatMessage);
+            messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
 }

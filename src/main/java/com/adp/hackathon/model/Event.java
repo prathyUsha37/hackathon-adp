@@ -14,7 +14,7 @@ public class Event {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long eventId;
+	private Long id;
 	
 	@Column(nullable = false)
 	private String name;
@@ -25,6 +25,13 @@ public class Event {
 	@Column(nullable = false)
 	private String time;
 	
+	@Column(nullable = false)
+	private String topic;
+	
+	//in hours
+	@Column(nullable = false)
+	private String createdBy;
+	
 	@Column( nullable = false)
 	private String description;
 	
@@ -34,11 +41,11 @@ public class Event {
 	private String link;
 
 	public Long getId() {
-		return eventId;
+		return id;
 	}
 
 	public void setId(Long id) {
-		this.eventId = id;
+		this.id = id;
 	}
 
 	public String getName() {
@@ -63,6 +70,22 @@ public class Event {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public String getTopic() {
+		return topic;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public String getDescription() {
@@ -91,10 +114,10 @@ public class Event {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + eventId + ", name=" + name + ", date=" + date + ", time=" + time + ", description="
-				+ description + ", image=" + image + ", link=" + link + "]";
+		return "Event [id=" + id + ", name=" + name + ", date=" + date + ", time=" + time + ", topic=" + topic
+				+ ", createdBy=" + createdBy + ", description=" + description + ", image=" + image + ", link=" + link
+				+ "]";
 	}
-	
-	
+
 
 }

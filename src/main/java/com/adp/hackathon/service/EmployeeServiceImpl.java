@@ -29,24 +29,14 @@ public class EmployeeServiceImpl implements EmployeeService{
 
 	@Override
 	@Transactional
-	public void updateEmployee(Long id,Employee employee) {
-		if(this.employeeDAO.isIdExists(id)) {
+	public boolean updateEmployee(Employee employee) {
+		if(this.employeeDAO.isIdExists(employee.getId())) {
 			this.employeeDAO.updateEmployee(employee);
+			return true;
 		}
+		return false;
 	}
 	
-
-	@Override
-	@Transactional
-	public List<Employee> listEmployees() {
-		return this.employeeDAO.listEmployees();
-	}
-
-	@Override
-	@Transactional
-	public Employee getEmployeeById(Long id) {
-		return this.employeeDAO.getEmployeeById(id);
-	}
 
 	@Override
 	@Transactional
@@ -57,10 +47,24 @@ public class EmployeeServiceImpl implements EmployeeService{
 		}
 	return false;
 	}
+	
 
+	@Override
+	@Transactional
+	public Employee getEmployeeById(Long id) {
+		return this.employeeDAO.getEmployeeById(id);
+	}
+
+	
 	@Override
 	public Employee getEmployeeByEmail(String email) {
 		return this.employeeDAO.getEmployeeByEmail(email);
+	}
+	
+	@Override
+	@Transactional
+	public List<Employee> listEmployees() {
+		return this.employeeDAO.listEmployees();
 	}
 
 }

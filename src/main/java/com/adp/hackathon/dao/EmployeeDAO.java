@@ -13,5 +13,4 @@ public interface EmployeeDAO {
 	public Employee getEmployeeById(Long id);
 	public Employee getEmployeeByEmail(String Email);
 	public void removeEmployee(Long id);	
-	public String getType(Long id);
 }

@@ -1,11 +1,4 @@
 package com.adp.hackathon.model;
-
-/**
- * Entity bean with JPA annotations
- * Hibernate provides JPA implementation
- *
- */
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -17,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Employee {
+public class Photo {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,11 +19,14 @@ public class Employee {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(nullable=false)
-	private String email;
+	@Column(nullable = false)
+	private String caption;
 	
-	@Column( nullable = false)
-	private String password;
+	@Column(nullable = false)
+	private String image;
+	
+	@Column(nullable = false)
+	private String count;
 
 	public Long getId() {
 		return id;
@@ -48,26 +44,35 @@ public class Employee {
 		this.name = name;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getCaption() {
+		return caption;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getImage() {
+		return image;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getCount() {
+		return count;
+	}
+
+	public void setCount(String count) {
+		this.count = count;
 	}
 
 	@Override
 	public String toString() {
-		return "Employee [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
+		return "Photo [id=" + id + ", name=" + name + ", caption=" + caption + ", image=" + image + ", count=" + count
+				+ "]";
 	}
-
 	
+
 }
